@@ -170,7 +170,7 @@ def format_result(record: Dict) -> str:
     if "trace" in record:
         block = record["trace"]
         lines.append("")
-        lines.append("Trace  (Sec. 4, Eq. 5) -- spectral energy across layers")
+        lines.append("Trace  (Sec. 4, Eq. 5): spectral energy across layers")
         for component in sorted(block["per_component"]):
             lines.append(f"    {component:<10s} {block['per_component'][component]:+.4f}")
         lines.append(f"    {'OVERALL':<10s} {block['score']:+.4f}   {trace.interpret(block['score'])}")
@@ -178,8 +178,8 @@ def format_result(record: Dict) -> str:
     if "subspace" in record:
         block = record["subspace"]
         lines.append("")
-        lines.append(f"Subspace  (Sec. 5, Eq. 8) -- k={block['top_k']}, J={block['J']}, "
-                     f"bottom-{block['n_bottom']} layers")
+        lines.append(f"Subspace  (Sec. 5, Eq. 8): k={block['top_k']}, J={block['J']}, "
+                     f"bottom {block['n_bottom']} layers")
         for component in sorted(block["per_component"]):
             lines.append(f"    {component:<10s} {block['per_component'][component]:.4f}")
         lines.append(f"    {'OVERALL':<10s} {block['score']:.4f}   {subspace.interpret(block['score'])}")

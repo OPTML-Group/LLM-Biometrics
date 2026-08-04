@@ -129,9 +129,9 @@ def interpret(score: float) -> str:
     if not np.isfinite(score):
         return "no comparable components"
     if score > 0.9:
-        return "very high -- shared base or near-identical weights"
+        return "very high: shared base or near identical weights"
     if score > 0.7:
-        return "high -- same series is likely"
+        return "high: same series is likely"
     if score > 0.5:
-        return "moderate -- some structural relatedness"
-    return "low -- consistent with independent origin"
+        return "moderate: some structural relatedness"
+    return "low: consistent with independent origin"

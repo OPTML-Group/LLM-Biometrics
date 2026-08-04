@@ -138,9 +138,9 @@ def interpret(score: float) -> str:
     if not np.isfinite(score):
         return "no comparable components"
     if score > 0.95:
-        return "near-identical subspaces -- light or no post-training"
+        return "near identical subspaces: light or no post-training"
     if score > 0.8:
-        return "well aligned -- shared base with moderate post-training"
+        return "well aligned: shared base with moderate post-training"
     if score > 0.5:
-        return "partially rotated -- substantial post-training divergence"
-    return "strongly rotated -- heavy post-training, or not a shared base"
+        return "partially rotated: substantial post-training divergence"
+    return "strongly rotated: heavy post-training, or not a shared base"

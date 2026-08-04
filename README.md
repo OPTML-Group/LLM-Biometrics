@@ -22,8 +22,8 @@
 
 This is the official code repository for the COLM 2026 paper [**Who Built This Model? Tracing LLM Lineage via Spectral Fingerprints in Weight Space**](https://arxiv.org/abs/XXXX.XXXXX).
 
-Open-weight LLMs are built on top of one another — fine-tuned, aligned, distilled, merged — leaving a tangled lineage that matters for provenance and IP governance. Do LLMs carry intrinsic **biometrics**: signatures readable from weights alone, with no prompts, no outputs, and no training data?
-They do. An SVD of each weight matrix gives two complementary fingerprints — **spectral energy** (the *Trace* metric), which tells independently trained models from same-series ones, and **subspace alignment**, which separates shared-base models differing only in post-training, where existing white-box metrics all saturate near 1.0. Together they recover a clear lineage hierarchy across 110+ open-weight pairs.
+Open-weight LLMs are built on top of one another through fine-tuning, alignment, distillation, and merging. The result is a tangled lineage that matters for provenance and IP governance. Do LLMs carry intrinsic **biometrics**, signatures readable from weights alone, with no prompts, no outputs, and no training data?
+They do. An SVD of each weight matrix gives two complementary fingerprints. **Spectral energy** (the *Trace* metric) tells independently trained models from same-series ones. **Subspace alignment** separates shared-base models that differ only in post-training, exactly where existing white-box metrics all saturate near 1.0. Together they recover a clear lineage hierarchy across 110+ open-weight pairs.
 
 ## News
 
@@ -48,14 +48,14 @@ They do. An SVD of each weight matrix gives two complementary fingerprints — *
 |---|:---:|:---:|:---:|:---:|:---:|
 | AWM / HuRef / PDF | ✗ | ✗ | ✓ | ✗ | ✗ |
 | Trace (Sec. 4) | ✓ | ✓ | ✓ | ✗ | ✗ |
-| Subspace Alignment (Sec. 5) | — | — | ✓ | ✓ | ✓ |
+| Subspace Alignment (Sec. 5) | n/a | n/a | ✓ | ✓ | ✓ |
 | **Ours**  | **✓** | **✓** | **✓** | **✓** | **✓** |
 
 | `--method` | Answers | Works on | Cost |
 |---|---|---|---|
 | `trace` | Are these two models related at all? | **any** pair, any architecture or depth | Frobenius norm, no SVD |
 | `subspace` | How far has this variant moved from its base? | same architecture and depth | truncated SVD per matrix |
-| `both` | — | same architecture and depth | — |
+| `both` | both of the above | same architecture and depth | both of the above |
 
 ## Installation
 
@@ -68,7 +68,7 @@ conda activate llm-bio
 pip install -r requirements.txt
 ```
 
-Reference environment: Python 3.9, `torch` 2.8, `transformers` 4.57, `numpy` 2.0, `scipy` 1.13. Only extraction needs torch — scoring is numpy-only. One GPU handles models up to ~14B; `--multi-gpu` shards larger ones.
+Reference environment: Python 3.9, `torch` 2.8, `transformers` 4.57, `numpy` 2.0, `scipy` 1.13. Only extraction needs torch, since scoring is numpy only. One GPU handles models up to ~14B. Pass `--multi-gpu` to shard larger ones.
 
 ## Quick Start
 
@@ -85,15 +85,15 @@ Qwen/Qwen2.5-7B
 Qwen/Qwen2.5-7B-Instruct
 ========================================================================
 
-Trace  (Sec. 4, Eq. 5) -- spectral energy across layers
-    OVERALL    +0.9980   very high -- shared base or near-identical weights
+Trace  (Sec. 4, Eq. 5): spectral energy across layers
+    OVERALL    +0.9980   very high: shared base or near identical weights
 
-Subspace  (Sec. 5, Eq. 8) -- k=512, J=3, bottom-3 layers
-    OVERALL    0.8234   well aligned -- shared base with moderate post-training
+Subspace  (Sec. 5, Eq. 8): k=512, J=3, bottom 3 layers
+    OVERALL    0.8234   well aligned: shared base with moderate post-training
 ========================================================================
 ```
 
-Trace says *these share a base*. Subspace says *how far the instruct variant rotated away from it* — the number no prior white-box method resolves, since AWM, HuRef and PDF all report 0.999–1.000 here.
+Trace says *these share a base*. Subspace says *how far the instruct variant rotated away from it*, the number no prior white-box method resolves. AWM, HuRef and PDF all report 0.999 to 1.000 on this pair.
 
 As a library:
 
@@ -125,11 +125,11 @@ Normalizing away depth and magnitude is what lets a 3B and a 14B model be compar
 
 $$S_c^{(l)} = \frac{1}{J} \sum\nolimits_{i \in \mathcal{I}_J} \sigma_i(\mathbf{C}_c^{(l)}) \in [0, 1]$$
 
-then averages the $K_{\text{layer}}$ least-aligned layers per component, and the components. It tracks post-training **data scale** (0.976 → 0.889 as Alpaca SFT grows 10% → 100%) and **algorithm** (DPO/PPO/RAFT leave distinct per-component signatures; $Q$ varies most, $K$/$V$ barely move).
+then averages the $K_{\text{layer}}$ least-aligned layers per component, and the components. It tracks post-training **data scale** (0.976 → 0.889 as Alpaca SFT grows 10% → 100%) and **algorithm** (DPO, PPO and RAFT leave distinct per-component signatures, with $Q$ varying most and $K$/$V$ barely moving).
 
 ## Reproducing the Paper
 
-The Appendix B model zoo ships as pair lists in [`configs/pairs/`](./configs/pairs/) — one `model_a  model_b` per line:
+The Appendix B model zoo ships as pair lists in [`configs/pairs/`](./configs/pairs/), one `model_a  model_b` per line:
 
 | Pair list | Regime | Pairs | Paper |
 |---|---|:---:|---|
@@ -161,7 +161,7 @@ CACHE_DIR=/scratch/$USER/fp bash scripts/run_s3_shared_base.sh
 Each pair appends a JSON record with the overall score, per-component scores, and the full per-layer subspace curve. Failed pairs are recorded and the sweep continues.
 
 > [!NOTE]
-> Two caveats before comparing against the printed tables. The four Alpaca lines in `s3_shared_base.txt` are local SFT checkpoints — repoint them at your own (LLaMA-Factory, lr 1e-5, 3 epochs, batch 128, stratified Alpaca subsamples, seed 42; App. J). And the cached bases behind the reported subspace numbers use $k = 512$ while Sec. 5 describes $k = 256$; Eq. (8) reads the least-aligned tail, so the score is stable across that range but not identical.
+> Two caveats before comparing against the printed tables. The four Alpaca lines in `s3_shared_base.txt` are local SFT checkpoints, so repoint them at your own (LLaMA-Factory, lr 1e-5, 3 epochs, batch 128, stratified Alpaca subsamples, seed 42, App. J). Also, the cached bases behind the reported subspace numbers use $k = 512$ while Sec. 5 describes $k = 256$. Eq. (8) reads the least-aligned tail, so the score is stable across that range but not identical.
 
 ## Hyper-parameters
 
@@ -174,7 +174,7 @@ Each pair appends a JSON record with the overall score, per-component scores, an
 | `--noise-std` | `0.0` | Gaussian weight perturbation before extraction. |
 | `--multi-gpu` | off | Shard the model across visible GPUs. |
 
-Scores rise monotonically with $J$ while the ordering across post-training settings stays fixed (Table A6) — the choice affects scale, not conclusions.
+Scores rise monotonically with $J$ while the ordering across post-training settings stays fixed (Table A6). The choice affects scale, not conclusions.
 
 ## Fingerprint Cache
 
@@ -187,7 +187,7 @@ Extraction is the expensive step, so it is cached per model and reused by every 
 | `<model>_noise_<sigma>_*` | the same, after Gaussian perturbation | as above |
 
 > [!IMPORTANT]
-> Fingerprints are never written into the repository. The cache defaults to `~/.cache/llm-biometrics`; override per run with `--cache-dir` / `CACHE_DIR`, or globally with `export LLM_BIOMETRICS_CACHE=/scratch/$USER/llm-biometrics`.
+> Fingerprints are never written into the repository. The cache defaults to `~/.cache/llm-biometrics`. Override it per run with `--cache-dir` or `CACHE_DIR`, or globally with `export LLM_BIOMETRICS_CACHE=/scratch/$USER/llm-biometrics`.
 
 ## Repository Layout
 
@@ -205,7 +205,7 @@ configs/pairs/        the Appendix B model zoo
 scripts/              one script per scenario, plus cache building
 ```
 
-To support a new model family, add a naming scheme to `_ATTENTION_SCHEMES` / `_FFN_SCHEMES` in `architectures.py` — the only file that knows how weights are named. Fused-QKV architectures (Falcon, Pythia, Phi-3) expose the fused matrix as `Q`; missing components are skipped, and each pair is compared on the components both models share.
+To support a new model family, add a naming scheme to `_ATTENTION_SCHEMES` / `_FFN_SCHEMES` in `architectures.py`, the only file that knows how weights are named. Fused-QKV architectures (Falcon, Pythia, Phi-3) expose the fused matrix as `Q`. Missing components are skipped, and each pair is compared on the components both models share.
 
 ## Cite This Work
 
