@@ -23,7 +23,6 @@
 This is the official code repository for the COLM 2026 paper [**Who Built This Model? Tracing LLM Lineage via Spectral Fingerprints in Weight Space**](https://arxiv.org/abs/XXXX.XXXXX).
 
 Open-weight LLMs are built on top of one another — fine-tuned, aligned, distilled, merged — leaving a tangled lineage that matters for provenance and IP governance. Do LLMs carry intrinsic **biometrics**: signatures readable from weights alone, with no prompts, no outputs, and no training data?
-
 They do. An SVD of each weight matrix gives two complementary fingerprints — **spectral energy** (the *Trace* metric), which tells independently trained models from same-series ones, and **subspace alignment**, which separates shared-base models differing only in post-training, where existing white-box metrics all saturate near 1.0. Together they recover a clear lineage hierarchy across 110+ open-weight pairs.
 
 ## News
