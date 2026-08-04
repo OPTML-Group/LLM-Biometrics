@@ -1,0 +1,40 @@
+# Scenario 1 -- Independent origin (Appendix B.1): 27 pairs.
+# Different organizations / training pipelines, no shared base model.
+# Score with the Trace metric: architectures and depths differ, so subspace
+# alignment does not apply here.
+#
+#   python -m llm_biometrics run-pairs --pairs configs/pairs/s1_independent_origin.txt \
+#       --method trace --components all --cache-dir features/
+
+# --- Qwen cross-family (7 pairs) ---
+Qwen/Qwen2.5-7B                 meta-llama/Llama-2-7b-hf
+Qwen/Qwen2.5-7B                 meta-llama/Llama-3.1-8B
+Qwen/Qwen2.5-7B                 mistralai/Mistral-7B-v0.3
+Qwen/Qwen2.5-7B                 google/gemma-7b
+Qwen/Qwen2.5-7B                 01-ai/Yi-6B
+Qwen/Qwen2.5-7B                 tiiuae/falcon-7b
+Qwen/Qwen2.5-7B                 deepseek-ai/deepseek-llm-7b-base
+
+# --- LLaMA cross-family (10 pairs) ---
+meta-llama/Llama-2-7b-hf        google/gemma-7b
+meta-llama/Llama-2-7b-hf        mistralai/Mistral-7B-v0.3
+meta-llama/Llama-2-7b-hf        01-ai/Yi-6B
+meta-llama/Llama-2-7b-hf        tiiuae/falcon-7b
+meta-llama/Llama-2-7b-hf        deepseek-ai/deepseek-llm-7b-base
+meta-llama/Llama-3.1-8B         mistralai/Mistral-7B-v0.3
+meta-llama/Llama-3.1-8B         google/gemma-7b
+meta-llama/Llama-3.1-8B         01-ai/Yi-6B
+meta-llama/Llama-3.1-8B         tiiuae/falcon-7b
+meta-llama/Llama-3.1-8B         deepseek-ai/deepseek-llm-7b-base
+
+# --- Other cross-family (10 pairs) ---
+mistralai/Mistral-7B-v0.3       google/gemma-7b
+mistralai/Mistral-7B-v0.3       01-ai/Yi-6B
+mistralai/Mistral-7B-v0.3       tiiuae/falcon-7b
+mistralai/Mistral-7B-v0.3       deepseek-ai/deepseek-llm-7b-base
+google/gemma-7b                 01-ai/Yi-6B
+google/gemma-7b                 tiiuae/falcon-7b
+google/gemma-7b                 deepseek-ai/deepseek-llm-7b-base
+01-ai/Yi-6B                     tiiuae/falcon-7b
+01-ai/Yi-6B                     deepseek-ai/deepseek-llm-7b-base
+tiiuae/falcon-7b                deepseek-ai/deepseek-llm-7b-base

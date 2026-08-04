@@ -1,0 +1,14 @@
+# Core method (llm_biometrics/)
+torch>=2.1
+transformers>=4.40
+numpy>=1.24
+scipy>=1.10
+
+# Baselines only (baselines/): AWM uses LAP matching + CKA, PDF uses the
+# LeaFBench harness. Install these if you plan to run the comparisons.
+# scikit-learn>=1.3
+# safetensors>=0.4
+# huggingface_hub>=0.23
+# pandas>=2.0
+# pyyaml>=6.0
+# accelerate>=0.30

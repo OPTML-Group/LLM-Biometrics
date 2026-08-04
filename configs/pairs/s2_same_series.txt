@@ -1,0 +1,29 @@
+# Scenario 2 -- Same series (Appendix B.2): 10 pairs.
+# Same model series and training pipeline, differing mainly in parameter scale.
+# Score with the Trace metric: depths differ, so curves are interpolated to a
+# common length (Eq. 4) before correlation.
+#
+#   python -m llm_biometrics run-pairs --pairs configs/pairs/s2_same_series.txt \
+#       --method trace --components all --cache-dir features/
+
+# --- Qwen (4 pairs) ---
+Qwen/Qwen2.5-3B                 Qwen/Qwen2.5-7B
+Qwen/Qwen2.5-7B                 Qwen/Qwen2.5-14B
+Qwen/Qwen3-4B                   Qwen/Qwen3-8B
+Qwen/Qwen3-8B                   Qwen/Qwen3-14B
+
+# --- Gemma (1 pair) ---
+google/gemma-2b                 google/gemma-7b
+
+# --- Pythia (2 pairs) ---
+EleutherAI/pythia-1b            EleutherAI/pythia-1.4b
+EleutherAI/pythia-1.4b          EleutherAI/pythia-2.8b
+
+# --- Falcon (1 pair) ---
+tiiuae/falcon-7b                tiiuae/falcon-11B
+
+# --- Mistral / Mixtral (1 pair) ---
+mistralai/Mistral-7B-v0.3       mistralai/Mixtral-8x7B-v0.1
+
+# --- LLaMA-2 (1 pair) ---
+meta-llama/Llama-2-7b-hf        meta-llama/Llama-2-13b-hf

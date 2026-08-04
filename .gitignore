@@ -1,0 +1,22 @@
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Fingerprint caches and run outputs. The cache defaults to
+# ~/.cache/llm-biometrics and should never live in the repo -- subspace bases
+# run to several GB per model. These entries catch it if someone overrides
+# --cache-dir to a local path.
+features/
+runs/
+*.npz
+*.pkl
+
+# Model weights and checkpoints
+checkpoints/
+model_cache/
+*.bin
+*.safetensors
+*.pth
+*.pt
+
+logs/

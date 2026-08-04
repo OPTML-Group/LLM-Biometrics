@@ -1,0 +1,13 @@
+# Intermediate cross-series relationships (Appendix F): 4 pairs.
+# Qwen2.5 vs Qwen3 -- same provider and design philosophy, different
+# architecture and pretraining corpus.  Their Trace scores fall between the
+# independent-origin and same-series means, which is the evidence that Trace
+# reads as a continuous relatedness signal rather than a hard three-way label.
+#
+#   python -m llm_biometrics run-pairs --pairs configs/pairs/cross_series.txt \
+#       --method trace --components all --cache-dir features/
+
+Qwen/Qwen2.5-7B                 Qwen/Qwen3-14B
+Qwen/Qwen2.5-7B                 Qwen/Qwen3-8B
+Qwen/Qwen2.5-14B                Qwen/Qwen3-8B
+Qwen/Qwen2.5-14B                Qwen/Qwen3-14B

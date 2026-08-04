@@ -1,0 +1,39 @@
+# Scenario 3 -- Shared base (Appendix B.3): 20 pairs.
+# All pairs share a pretrained base and diverge only through post-training, so
+# architecture and depth match and both metrics apply.  Trace saturates near 1
+# here; subspace alignment is what separates these pairs.
+#
+#   python -m llm_biometrics run-pairs --pairs configs/pairs/s3_shared_base.txt \
+#       --method both --components all --cache-dir features/
+
+# --- Data-scale variants: standard instruction tuning (5 pairs) ---
+Qwen/Qwen2.5-7B                 Qwen/Qwen2.5-7B-Instruct
+Qwen/Qwen2.5-14B                Qwen/Qwen2.5-14B-Instruct
+Qwen/Qwen3-4B                   Qwen/Qwen3-4B-Instruct-2507
+Qwen/Qwen3-4B                   Qwen/Qwen3-4B-Thinking-2507
+meta-llama/Llama-3.1-8B         meta-llama/Meta-Llama-3.1-8B-Instruct
+
+# --- Controlled data-scale ablation on Alpaca (4 pairs, Appendix J) ---
+# Replace the right-hand paths with your own SFT checkpoints: LLaMA-Factory,
+# lr 1e-5, 3 epochs, batch 128, on a 10/25/50/100% stratified Alpaca subsample.
+meta-llama/Llama-3.1-8B         checkpoints/sft_alpaca_10pct_lr1e5
+meta-llama/Llama-3.1-8B         checkpoints/sft_alpaca_25pct_lr1e5
+meta-llama/Llama-3.1-8B         checkpoints/sft_alpaca_50pct_lr1e5
+meta-llama/Llama-3.1-8B         checkpoints/sft_alpaca_100pct_lr1e5
+
+# --- Algorithmic variants: Tulu-3 (3 pairs) ---
+meta-llama/Llama-3.1-8B         allenai/Llama-3.1-Tulu-3-8B
+meta-llama/Llama-3.1-8B         allenai/Llama-3.1-Tulu-3-8B-SFT
+meta-llama/Llama-3.1-8B         allenai/Llama-3.1-Tulu-3-8B-DPO
+
+# --- Algorithmic variants: RLHFlow on Qwen2.5-Math-7B (5 pairs) ---
+Qwen/Qwen2.5-Math-7B            RLHFlow/Qwen2.5-7B-SFT
+Qwen/Qwen2.5-Math-7B            RLHFlow/Qwen2.5-7B-DPO
+Qwen/Qwen2.5-Math-7B            RLHFlow/Qwen2.5-7B-DPO-Zero
+Qwen/Qwen2.5-Math-7B            RLHFlow/Qwen2.5-7B-PPO-Zero
+Qwen/Qwen2.5-Math-7B            RLHFlow/Qwen2.5-7B-RAFT-Zero
+
+# --- Algorithmic variants: Qwen3-14B reasoning models (3 pairs) ---
+Qwen/Qwen3-14B                  ReasoningTransferability/UniReason-Qwen3-14B-no-think-SFT
+Qwen/Qwen3-14B                  ReasoningTransferability/UniReason-Qwen3-14B-think-SFT
+Qwen/Qwen3-14B                  ReasoningTransferability/UniReason-Qwen3-14B-RL
