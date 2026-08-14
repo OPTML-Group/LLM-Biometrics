@@ -212,10 +212,10 @@ To support a new model family, add a naming scheme to `_ATTENTION_SCHEMES` / `_F
 If you found our code or paper helpful, please cite our work~
 
 ```
-@inproceedings{chen2026who,
+@article{chen2026built,
   title={Who Built This Model? Tracing LLM Lineage via Spectral Fingerprints in Weight Space},
   author={Chen, Yiwei and Shang, Bingqi and Liu, Sijia},
-  booktitle={Conference on Language Modeling (COLM)},
+  journal={arXiv preprint arXiv:2608.07786},
   year={2026}
 }
 ```
