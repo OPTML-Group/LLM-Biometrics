@@ -27,7 +27,7 @@ They do. An SVD of each weight matrix gives two complementary fingerprints. **Sp
 
 ## News
 
-- 📢 [Aug 2026] We released the code and posted our paper on [arXiv](https://arxiv.org/abs/XXXX.XXXXX)! 🚀
+- 📢 [Aug 2026] We released the code and posted our paper on [arXiv](https://arxiv.org/abs/2608.07786)! 🚀
 - 🎉 [Jul 2026] Our paper has been accepted by **COLM 2026**! ✨
 
 ## Table of Contents
